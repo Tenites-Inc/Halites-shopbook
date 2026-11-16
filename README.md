@@ -1,3 +1,9 @@
-# ShopBook by Halites: live demo
+# ShopBook by Halites
 
-Clickable MVP demo with sample data. Served by GitHub Pages at https://tenites-inc.github.io/Halites-shopbook/
+- **Live demo** (sample data): https://tenites-inc.github.io/Halites-shopbook/
+  Switch **Trade** on the Shop side to see all seven packs: provisions shop,
+  wholesaler, building materials, cooking gas, pharmacy, petrol station and
+  beauty salon.
+- **MVP proposal (PDF):** https://tenites-inc.github.io/Halites-shopbook/ShopBook_by_Halites_MVP_Proposal.pdf
+
+Everything here is public. The demo uses invented shops, people and figures.
