@@ -1,5 +1,4 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
-<title>ShopBook by Halites</title>
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body><title>ShopBook by Halites</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -36,7 +35,7 @@ body::before{content:""; position:fixed; inset:0 0 auto; height:env(safe-area-in
 h1,h2,h3{font-family:var(--f-display); margin:0; letter-spacing:-0.01em; text-wrap:balance}
 h1{font-size:24px; line-height:1.2} h2{font-size:18px} h3{font-size:16px}
 p{margin:0}
-.num{font-variant-numeric:tabular-nums}
+.num{font-variant-numeric:proportional-nums}
 .muted{color:var(--muted)} .small{font-size:13px}
 .sr{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap}
 button{font:inherit; cursor:pointer; color:inherit}
@@ -191,6 +190,15 @@ td.r, th.r{text-align:right}
 .lockbox .mark{width:56px; height:56px; font-size:24px; margin:0 auto}
 .morelist{display:flex; flex-direction:column; gap:8px}
 .morelist a{display:flex; align-items:center; gap:12px; padding:14px; border-radius:12px; background:var(--surface); border:1px solid var(--line); text-decoration:none; color:var(--ink); font-weight:600}
+.morelist a .md{display:flex; flex-direction:column; min-width:0}
+.morelist a .md span{font-weight:400; font-size:13px; color:var(--muted)}
+#demoswitch{display:grid; gap:8px; margin:0 0 14px}
+#demoswitch:empty{display:none}
+#demoswitch .rolesel{justify-content:space-between}
+#demoswitch .rolesel > span{display:inline!important}
+#demoswitch .rolesel select{max-width:62%}
+.ptile.isout{opacity:.62}
+.ptile.isout .tile{background:var(--surface-2)}
 
 /* modal, drawer, toast, bottom nav */
 .backdrop{position:fixed; inset:0; z-index:50; background:var(--scrim); display:grid; place-items:center; padding:16px}
@@ -264,6 +272,17 @@ td.r, th.r{text-align:right}
   .iconbtn{width:34px; height:34px}
   .rolesel > span{display:none}
   .shopname span{display:none}
+  .bar .in{flex-wrap:nowrap}
+  .bar .right{width:auto; flex-wrap:nowrap; justify-content:flex-end}
+  .bar .sync > span{display:none}
+  .meter{display:block; width:44px; margin:4px 0 0 auto}
+  table.je thead{display:none}
+  table.je tr{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:2px 12px; padding:10px 0; border-bottom:1px solid var(--line)}
+  table.je td{display:block; border:0; padding:0}
+  table.je .c-id{grid-column:1 / -1; order:-1}
+  table.je .c-memo{font-weight:600}
+  table.je .c-acc{grid-column:1 / -1}
+  table.je .c-by{grid-column:1 / -1; color:var(--muted)}
   .formrow{grid-template-columns:1fr}
   .kv{grid-template-columns:1fr; gap:2px}
   .barrow{grid-template-columns:80px 1fr 84px}
@@ -749,6 +768,7 @@ td.r, th.r{text-align:right}
 <button class="fab" data-act="drawer" id="fab"></button>
 <aside class="drawer" id="drawer" aria-label="Demo controls">
   <div class="dhead"><div><h2>Demo controls</h2><span class="muted small">Not part of the product. Play the customer and the wallet rail.</span></div><button class="x" data-act="drawer" aria-label="Close demo controls">×</button></div>
+  <div id="demoswitch" aria-label="Switch the demo view"></div>
   <div class="dbody">
     <div class="stack"><h3>Wallet payments (launch rail)</h3><div class="stack" id="sim"></div></div>
     <div class="stack" style="flex:1; min-height:0"><div class="row"><h3>Integration log</h3><button class="btn sm" data-act="clearlog">Clear</button></div><div class="log" id="log" aria-live="polite"></div></div>
@@ -1357,7 +1377,7 @@ const H = {
     closeModal();
   },
   /* basket */
-  add(id){ const s = active; if(s.state !== 'open') return; const gp = prod(id); if(id === 'g-refill' && !gas.safety){ toast('Do the opening safety check before any refill'); return; } if(gp && gp.tank && !F.open){ toast('Open the shift on Pumps & tanks before selling fuel'); return; } if(gp && gp.batches && (s.lines[id] || 0) + 1 > usable(gp)){ toast(gp.stock > usable(gp) ? (usable(gp) ? `Only ${usable(gp)} in date. The rest has expired and can’t be sold` : 'Only expired stock left. It can’t be sold') : `That’s all the ${gp.name} in stock`); return; } if(gp && gp.dish && (s.lines[id] || 0) + 1 > platesLeft(gp)){ toast(platesLeft(gp) ? `Only ${platesLeft(gp)} plates of ${gp.name} left` : `${gp.name} is sold out: not enough ingredients left`); return; } if(gp && reserved(id) && (s.lines[id] || 0) + 1 > freeStock(gp)){ toast(`Only ${Math.max(0, freeStock(gp))} ${gp.unit}s free to sell. The rest is already paid for by customers`); return; } if(!s.lines[id]){ s.lines[id] = 0; s.order.push(id); } s.lines[id]++; s.notice = ''; },
+  add(id){ const s = active; if(s.state !== 'open') return; const gp = prod(id); if(id === 'g-refill' && !gas.safety){ toast('Do the opening safety check before any refill'); return; } if(gp && gp.tank && !F.open){ toast('Open the shift on Pumps & tanks before selling fuel'); return; } if(gp && gp.batches && (s.lines[id] || 0) + 1 > usable(gp)){ toast(gp.stock > usable(gp) ? (usable(gp) ? `Only ${usable(gp)} in date. The rest has expired and can’t be sold` : 'Only expired stock left. It can’t be sold') : `That’s all the ${gp.name} in stock`); return; } if(gp && gp.dish && (s.lines[id] || 0) + 1 > platesLeft(gp)){ toast(platesLeft(gp) ? `Only ${platesLeft(gp)} plates of ${gp.name} left` : `${gp.name} is sold out: not enough ingredients left`); return; } if(gp && reserved(id) && (s.lines[id] || 0) + 1 > freeStock(gp)){ toast(`Only ${Math.max(0, freeStock(gp))} ${gp.unit}s free to sell. The rest is already paid for by customers`); return; } if(gp && !gp.service && !gp.dish && !gp.batches && (s.lines[id] || 0) + 1 > gp.stock) toast(`Records show no ${gp.name} left. Sold anyway: count it at close and record what arrived`); if(!s.lines[id]){ s.lines[id] = 0; s.order.push(id); } s.lines[id]++; s.notice = ''; },
   inc(id){ const gp = prod(id); if(gp && gp.batches && active.lines[id] + 1 > usable(gp)){ toast('No more in-date stock of this medicine'); return; } active.lines[id]++; if(gp && gp.rx) active.rxOk = false; },
   dec(id){ const s = active; s.lines[id]--; if(s.lines[id] <= 0){ delete s.lines[id]; s.order = s.order.filter(x => x !== id); } },
   qdel(i){ active.quick.splice(+i, 1); },
@@ -1734,7 +1754,7 @@ function renderShell(view){
   $('#bnav').style.gridTemplateColumns = me() === 'owner' ? '' : `repeat(${bn.filter(n => n[0] !== 'more' && allowed(n[0])).length},1fr)`;
   const moreViews = ['route','sites','expiry','gastank','pumps','salon','kitchen','books','staff','comply','more','owed','insights','credit','agents','console','team'];
   $('#bnav').innerHTML = bn.filter(n => n[0] === 'more' ? me() === 'owner' : allowed(n[0])).map(n => `<a href="#${n[0]}" ${(view===n[0] || (n[0]==='more' && moreViews.includes(view)))?'aria-current="page"':''}>${I[n[2]]}<span>${n[1]}</span>${cnt[n[0]]?`<span class="cnt">${cnt[n[0]]}</span>`:''}</a>`).join('');
-  $('#morelist').innerHTML = (TRADES[ui.trade].nav ? [TRADES[ui.trade].nav] : []).concat([['owed','Who Owes Me','book'],['insights','My Report','insights'],['credit','Loan','credit'],['agents','Auto Helpers (preview)','agent'],['team','Team & approvals','console'],['books','Accounts','insights'],['staff','Staff & payroll','console'],['comply','Compliance','book']]).map(n => `<a href="#${n[0]}">${I[n[2]]}${n[1]}</a>`).join('');
+  $('#morelist').innerHTML = (TRADES[ui.trade].nav ? [TRADES[ui.trade].nav] : []).concat([['owed','Who Owes Me','book','Pay-later book, reminders and part payments'],['insights','My Report','insights','Sales, profit and best sellers'],['credit','Loan','credit','Supplier credit from licensed lenders'],['agents','Auto Helpers (preview)','agent','Restock and reminders done for you'],['team','Team & approvals','console','Staff PINs and what needs your OK'],['books','Accounts','insights','Profit and loss, balance sheet and VAT'],['staff','Staff & payroll','console','Clock-in, leave, pay and pension'],['comply','Compliance','book','Licences, filings and inspections']]).map(n => `<a href="#${n[0]}">${I[n[2]]}<span class="md">${n[1]}${n[3] ? `<span>${n[3]}</span>` : ''}</span></a>`).join('');
   $('#bell').innerHTML = I.bell + (alerts.length ? `<span class="dot">${alerts.length}</span>` : '');
   const pend = sales.filter(s => s.state==='awaiting' || s.state==='unknown').length;
   $('#fab').innerHTML = `${I.play}Demo controls${pend?` <span class="dot">${pend}</span>`:''}`;
@@ -1826,7 +1846,7 @@ function renderSell(){
   document.querySelectorAll('#pfilter .chip').forEach(c => c.setAttribute('aria-pressed', c.dataset.arg === ui.pf));
   const q = ui.q.toLowerCase();
   const list = products.filter(p => !p.ingr && (!q || p.name.toLowerCase().includes(q)) && (ui.pf==='all' || (ui.pf==='low' && stockState(p)!=='ok') || (ui.pf==='promo' && p.promo)));
-  $('#pgrid').innerHTML = list.map(p => { const st = stockState(p); if(p.dish){ const pl = platesLeft(p); return `<button class="ptile" data-act="add" data-arg="${p.id}"><span class="top"><span class="tile" aria-hidden="true">${esc(initials(p.name))}</span><span class="badge">${foodPct(p) > FOOD_TARGET ? 'food cost ' + Math.round(foodPct(p)) + '%' : 'dish'}</span></span><b>${esc(p.name)}</b><span class="pr num">${priceLabel(p)}</span><span class="st ${pl ? (pl <= 5 ? 'low' : '') : 'out'}">${pl ? pl + ' plates left' : 'Sold out'}</span></button>`; } if(p.service) return `<button class="ptile" data-act="add" data-arg="${p.id}"><span class="top"><span class="tile" aria-hidden="true">${esc(initials(p.name))}</span><span class="badge">service</span></span><b>${esc(p.name)}</b><span class="pr num">${priceLabel(p)}</span><span class="st">about ${p.mins >= 60 ? (p.mins / 60) + ' hr' + (p.mins > 60 ? 's' : '') : p.mins + ' min'}${p.uses ? ' · uses stock' : ''}</span></button>`; return `<button class="ptile" data-act="add" data-arg="${p.id}"><span class="top"><span class="tile" aria-hidden="true">${esc(initials(p.name))}</span>${p.promo?`<span class="badge">${p.promo.type==='discount'?p.promo.pct+'% off':'+'+p.promo.pts+' pts'}</span>`:''}</span><b>${esc(p.name)}</b><span class="pr num">${priceLabel(p)}${p.measure?' / '+p.unit:''}</span><span class="st ${st==='ok'?'':st}">${p.batches ? usable(p) + ' in date' + (p.stock > usable(p) ? ' · ' + (p.stock - usable(p)) + ' expired' : '') : fmtQ(p.stock) + ' left'}${st==='low'?' · almost finished':''}${p.rx ? ' · prescription' : ''}</span></button>`; }).join('') + `<button class="ptile quick" data-act="quick">+ Item not in list<br><span class="small muted" style="font-weight:400">Sell it by name and price</span></button>`;
+  $('#pgrid').innerHTML = list.map(p => { const st = stockState(p); if(p.dish){ const pl = platesLeft(p); return `<button class="ptile" data-act="add" data-arg="${p.id}"><span class="top"><span class="tile" aria-hidden="true">${esc(initials(p.name))}</span><span class="badge">${foodPct(p) > FOOD_TARGET ? 'food cost ' + Math.round(foodPct(p)) + '%' : 'dish'}</span></span><b>${esc(p.name)}</b><span class="pr num">${priceLabel(p)}</span><span class="st ${pl ? (pl <= 5 ? 'low' : '') : 'out'}">${pl ? pl + ' plates left' : 'Sold out'}</span></button>`; } if(p.service) return `<button class="ptile" data-act="add" data-arg="${p.id}"><span class="top"><span class="tile" aria-hidden="true">${esc(initials(p.name))}</span><span class="badge">service</span></span><b>${esc(p.name)}</b><span class="pr num">${priceLabel(p)}</span><span class="st">about ${p.mins >= 60 ? (p.mins / 60) + ' hr' + (p.mins > 60 ? 's' : '') : p.mins + ' min'}${p.uses ? ' · uses stock' : ''}</span></button>`; return `<button class="ptile${st==='out'?' isout':''}" data-act="add" data-arg="${p.id}"><span class="top"><span class="tile" aria-hidden="true">${esc(initials(p.name))}</span>${p.promo?`<span class="badge">${p.promo.type==='discount'?p.promo.pct+'% off':'+'+p.promo.pts+' pts'}</span>`:''}</span><b>${esc(p.name)}</b><span class="pr num">${priceLabel(p)}${p.measure?' / '+p.unit:''}</span><span class="st ${st==='ok'?'':st}">${p.batches ? usable(p) + ' in date' + (p.stock > usable(p) ? ' · ' + (p.stock - usable(p)) + ' expired' : '') : st==='out' ? 'None left on record' : fmtQ(p.stock) + ' left'}${st==='low'?' · almost finished':''}${p.rx ? ' · prescription' : ''}</span></button>`; }).join('') + `<button class="ptile quick" data-act="quick">+ Item not in list<br><span class="small muted" style="font-weight:400">Sell it by name and price</span></button>`;
   const dis = t <= 0 || s.state !== 'open' ? 'disabled' : '';
   $('#cart').innerHTML = `<div class="card-head"><h2>This sale</h2><span class="muted small">${s.id}</span></div>
     <div class="lines">${itemsCount(s) ? s.order.map(id => { const p = prod(id); return `<div class="line"><span>${esc(p.name)}</span><span class="qty"><button data-act="dec" data-arg="${id}" aria-label="One less ${esc(p.name)}" ${s.state!=='open'?'disabled':''}>−</button><span class="num">${s.lines[id]}</span><button data-act="inc" data-arg="${id}" aria-label="One more ${esc(p.name)}" ${s.state!=='open'?'disabled':''}>+</button></span><span class="num">${naira(priceOf(p)*s.lines[id])}</span></div>`; }).join('') + s.quick.map((q,i) => `<div class="line"><span>${esc(q.name)} <span class="pill plain">quick sale</span></span><button class="btn sm" data-act="qdel" data-arg="${i}">Remove</button><span class="num">${naira(q.amt)}</span></div>`).join('') : '<div class="empty">Tap goods to add them</div>'}</div>
@@ -2083,7 +2103,7 @@ function renderBooks(){
   const out = -b.vat, inp = b.vatin, net = out - inp;
   $('#bkvat').innerHTML = `<div class="card-head"><h2>VAT</h2><span class="muted small">7.5% · Nigeria Revenue Service</span></div>` + (reg ? row('VAT charged on sales', naira(out)) + row('− VAT paid on purchases', naira(inp)) + row(net >= 0 ? 'To pay' : 'To carry forward', naira(Math.abs(net)), true) + `<p class="muted small">Return and payment due ${fmtD(nextMonthDay(21))}. Basic food and medicines are zero-rated; ${ui.trade === 'fuel' ? 'VAT on petrol, diesel and kerosene is suspended' : ui.trade === 'gas' ? 'VAT on cooking gas is suspended' : 'other goods carry 7.5%'}. Each item’s VAT class is set once and checked by your accountant.</p>` + (bk.vatFiled ? `<div class="panel good"><b>Filed and paid ${bk.vatFiled.t}</b><span class="small">${naira(bk.vatFiled.amt)} paid.</span></div>` : me() === 'owner' && net > 0 ? '<button class="btn sm primary" data-act="bkvat" style="align-self:flex-start">File and pay VAT</button>' : '<span class="small muted">Bisi prepares the return; Ngozi files and pays it.</span>')
     : `<div class="panel info"><b>You don’t charge VAT</b><span class="small">Turnover is about ${naira(Math.round(dailyTurn() * 365 / 1e8) * 1e8)} a year. A business at ₦100m or less (and fixed assets of ₦250m or less) doesn’t register for, charge or file VAT. ShopBook warns you before you cross it.</span></div>`);
-  $('#bkje').innerHTML = `<div class="card-head"><h2>Journal</h2><span class="muted small">Newest first · each entry balances</span></div><div class="tablewrap" style="border:0"><table><thead><tr><th>Entry</th><th>What</th><th>Accounts</th><th class="r">Amount</th><th>By</th></tr></thead><tbody>${bk.je.slice(0, 10).map(j => `<tr><td class="num">${j.id}<br><span class="muted small">${j.seed ? 'This month' : j.t}</span></td><td>${esc(j.memo)}</td><td class="small">${j.lines.filter(l => l[1] > 0).map(l => 'Dr ' + esc(ACN[l[0]][0])).join(', ')}<br><span class="muted">${j.lines.filter(l => l[1] < 0).map(l => 'Cr ' + esc(ACN[l[0]][0])).join(', ')}</span></td><td class="r num">${naira(j.amt)}</td><td class="small">${esc(j.by)}</td></tr>`).join('')}</tbody></table></div><p class="muted small">Your accountant can sign in with their own PIN to read the books, record expenses and prepare VAT and payroll. Only the owner approves payments.</p>`;
+  $('#bkje').innerHTML = `<div class="card-head"><h2>Journal</h2><span class="muted small">Newest first · each entry balances</span></div><div class="tablewrap" style="border:0"><table class="je"><thead><tr><th>Entry</th><th>What</th><th>Accounts</th><th class="r">Amount</th><th>By</th></tr></thead><tbody>${bk.je.slice(0, 10).map(j => `<tr><td class="num c-id small">${j.id} <span class="muted">· ${j.seed ? 'This month' : j.t}</span></td><td class="c-memo">${esc(j.memo)}</td><td class="small c-acc">${j.lines.filter(l => l[1] > 0).map(l => 'Dr ' + esc(ACN[l[0]][0])).join(', ')}<br><span class="muted">${j.lines.filter(l => l[1] < 0).map(l => 'Cr ' + esc(ACN[l[0]][0])).join(', ')}</span></td><td class="r num c-amt">${naira(j.amt)}</td><td class="small c-by">${esc(j.by)}</td></tr>`).join('')}</tbody></table></div><p class="muted small">Your accountant can sign in with their own PIN to read the books, record expenses and prepare VAT and payroll. Only the owner approves payments.</p>`;
 }
 function renderStaff(){
   if(!['owner','acct'].includes(me()) || currentView() !== 'staff') return;
@@ -2291,6 +2311,10 @@ const views = ['route','sites','expiry','gastank','pumps','salon','kitchen','boo
 const currentView = () => { const h = (location.hash||'').slice(1); return views.includes(h) ? h : ROLES[ui.role || 'shop'].def; };
 function route(){ const v = currentView(); if(['supplier','brand'].includes(roleOf(v)) && ui.trade !== 'prov'){ setTrade('prov'); toast('Supplier and brand views use the provisions network (Mama Ngozi Provisions)'); } if(PACKVIEWS.includes(v) && (TRADES[ui.trade].nav || [])[0] !== v){ location.hash = '#sell'; return; } ui.role = roleOf(v); if(!allowed(v)){ location.hash = '#' + (ALLOW[me()] || [ROLES[ui.role].def])[0]; return; } views.forEach(x => { $('#v-'+x).hidden = x !== v; }); render(); window.scrollTo(0,0); }
 window.addEventListener('hashchange', route);
+(function(){ if(!window.matchMedia) return; const mq = matchMedia('(max-width: 860px)');
+  const parts = () => ['#role-view', '#trade', '#who-view'].map(id => document.querySelector(id).closest('label')).concat([document.querySelector('.tourbtn')]);
+  const place = () => { const host = mq.matches ? document.getElementById('demoswitch') : document.querySelector('.bar .right'); const ref = mq.matches ? null : document.querySelector('.bar .right .sync'); parts().forEach(el => host.insertBefore(el, ref)); };
+  place(); mq.addEventListener ? mq.addEventListener('change', place) : mq.addListener(place); })();
 
 document.addEventListener('click', e => {
   resetIdle();
@@ -2342,3 +2366,5 @@ try { ui.tour = localStorage.getItem('sb-tour') ? null : -1; } catch(e){ ui.tour
 route(); render(); resetIdle();
 })();
 </script>
+
+</body></html>
