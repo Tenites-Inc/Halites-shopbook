@@ -138,6 +138,34 @@ main{min-width:0}
 .pay{display:grid; grid-template-columns:1fr 1fr; gap:6px}
 .pay .btn{padding:11px 8px}
 .pay .momo{grid-column:span 2}
+.pay .cardbtn{grid-column:span 2}
+.devsel{display:flex; justify-content:space-between; margin:0 0 10px}
+.devsel > span{display:inline!important}
+.receipt{font-family:var(--f-mono); font-size:12px; line-height:1.45; background:#FFFFFF; color:#141414; width:100%; max-width:288px; margin:4px auto; padding:14px 12px; border:1px dashed #A8A496; display:flex; flex-direction:column; gap:1px; text-align:center}
+.receipt hr{border:0; border-top:1px dashed #8C887C; width:100%; margin:6px 0}
+.receipt .rl{display:flex; justify-content:space-between; gap:10px; text-align:left}
+.receipt .rl span:last-child{white-space:nowrap}
+.receipt .tot{font-weight:700; font-size:13px}
+/* POS card terminal mode: the Sell screen only, sized for a 5-6 inch Android terminal, big touch targets */
+body.term .app{grid-template-columns:1fr; max-width:420px; margin-inline:auto; border-inline:1px solid var(--line); min-height:100vh; background:var(--bg)}
+body.term .side, body.term .bnav{display:none!important}
+body.term .bar .rolesel, body.term .bar .tourbtn, body.term .bar #voicebtn, body.term .bar #bell, body.term .bar .avatar, body.term .bar .sync > span{display:none}
+body.term .bar .mark{display:grid; width:32px; height:32px}
+body.term .bar .in{flex-wrap:nowrap}
+body.term .page{padding-block:12px 170px; gap:12px}
+body.term #v-sell .phead p, body.term #today{display:none}
+body.term .pos{grid-template-columns:1fr}
+body.term .pgrid{grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px}
+body.term .ptile{min-height:84px; padding:10px 12px; gap:4px}
+body.term .ptile .tile{display:none}
+body.term .ptile .top:not(:has(.badge)){display:none}
+body.term .ptile b{font-size:15px}
+body.term .cart{position:static}
+body.term .pay .btn{min-height:48px; font-size:15px}
+body.term .cartbar{display:flex; position:fixed; left:50%; transform:translateX(-50%); width:min(396px, calc(100vw - 24px)); bottom:calc(12px + env(safe-area-inset-bottom,0px)); z-index:39; justify-content:space-between; align-items:center; gap:10px; background:var(--accent); color:var(--accent-ink); border:0; border-radius:12px; padding:14px 16px; font-weight:700; font-size:16px; box-shadow:0 8px 20px -10px rgba(0,0,0,.5)}
+body.term .cartbar[hidden]{display:none}
+body.term .fab{bottom:calc(76px + env(safe-area-inset-bottom,0px))}
+body.term .tour{display:none!important}
 .cartbar{display:none}
 
 /* lists and tables */
@@ -776,6 +804,7 @@ td.r, th.r{text-align:right}
 <button class="fab" data-act="drawer" id="fab"></button>
 <aside class="drawer" id="drawer" aria-label="Demo controls">
   <div class="dhead"><div><h2>Demo controls</h2><span class="muted small">Not part of the product. Play the customer and the wallet rail.</span></div><button class="x" data-act="drawer" aria-label="Close demo controls">×</button></div>
+  <label class="rolesel devsel"><span>Device</span><select id="device" aria-label="Device"><option value="web">Phone or computer</option><option value="term">POS card terminal</option></select></label>
   <div id="demoswitch" aria-label="Switch the demo view"></div>
   <div class="dbody">
     <div class="stack"><h3>Wallet payments (launch rail)</h3><div class="stack" id="sim"></div></div>
@@ -902,8 +931,8 @@ const prod = id => products.find(p => p.id === id);
 const fmtQ = v => (Math.round(v * 10) / 10).toLocaleString('en-NG');
 const low = p => Math.max(1, Math.round(p.par * 0.2));
 const priceOf = p => p.promo && p.promo.type === 'discount' ? Math.round(p.price * (100 - p.promo.pct) / 100) : p.price;
-const takings = {momo:4235000, transfer:1520000, till:840000, cash:6190000, account:120000, count:37};
-const digitalTotal = () => takings.momo + takings.transfer + takings.till;
+const takings = {momo:4235000, transfer:1520000, till:840000, card:0, cash:6190000, account:120000, count:37};
+const digitalTotal = () => takings.momo + takings.transfer + takings.till + takings.card;
 const digitalShare = () => { const d = digitalTotal(); return Math.round(d / (d + takings.cash + takings.account) * 100); };
 let seq = 1043, att = 5521, till = 88214, trf = 40921, exc = 312, ord = 201, supSeq = 1;
 const sales = [], log = [], alerts = [], waSent = [], orders = [];
@@ -916,7 +945,7 @@ const flags = [
  {id:'F-202', what:'First-purchase bonus at 6 shops in an hour', detail:'Wallet ••••2290 · 420 pts pending', by:'Grace', state:'open'},
  {id:'F-203', what:'Payer shares a device with shop staff', detail:'Identity match: yes · 95 pts pending', by:'Tunde', state:'frozen'}
 ];
-const ui = {voice:'en', scanCtx:'stock', closeRes:null, billRes:null, closed:false, accCust:'bello', pf:'all', sf:'all', q:'', modal:null, drawer:false, rcvSup:'ade', rcvDone:null, add:{item:null}, count:null, partner:'Local rider company'};
+const ui = {term:false, voice:'en', scanCtx:'stock', closeRes:null, billRes:null, closed:false, accCust:'bello', pf:'all', sf:'all', q:'', modal:null, drawer:false, rcvSup:'ade', rcvDone:null, add:{item:null}, count:null, partner:'Local rider company'};
 let store = {live:false, wa:true, ig:false};
 let consent = false, credit = {state:'none'};
 /* ---------- customer, lender, partner ---------- */
@@ -1223,7 +1252,7 @@ const total = s => Math.max(0, s.order.reduce((t,id)=>t+priceOf(prod(id))*s.line
 const itemsCount = s => s.order.reduce((t,id)=>t+s.lines[id],0) + s.quick.length;
 
 function L(src, msg){ log.unshift({t:clock(), src, msg}); if(log.length>120) log.pop(); }
-const SRC = {momo:['Wallet rail','s-momo'], mtn:['Partner messaging','s-mtn'], us:['Halites','s-us'], stock:['Stock ledger','s-stock'], pts:['Points','s-pts'], ext:['Partner','s-ext'], agent:['Helpers','s-agent']};
+const SRC = {card:['Card app (PTSP)','s-ext'], momo:['Wallet rail','s-momo'], mtn:['Partner messaging','s-mtn'], us:['Halites','s-us'], stock:['Stock ledger','s-stock'], pts:['Points','s-pts'], ext:['Partner','s-ext'], agent:['Helpers','s-agent']};
 let toastT;
 function toast(msg){ const t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(()=>{ t.hidden = true; }, 2800); }
 
@@ -1277,7 +1306,7 @@ function complete(s, method){
     repay(t, s.id);
   } else if(method === 'cash') L('us', `${s.id} recorded as cash ${naira(t)} · no points`);
   else if(method === 'account'){ const c = customers.find(x => x.id === ui.accCust) || customers[0]; c.owed += t; if(c.owed === t) c.days = 0; s.custName = c.name; L('us', `${s.id} pay later · ${c.name} now owes ${naira(c.owed)}`); }
-  if(method === 'momo' || method === 'transfer' || method === 'till') announce(t, method === 'momo' ? 'wallet' : method === 'transfer' ? 'transfer' : 'your shop code');
+  if(method === 'momo' || method === 'transfer' || method === 'till' || method === 'card') announce(t, method === 'momo' ? 'wallet' : method === 'transfer' ? 'transfer' : method === 'card' ? 'card' : 'your shop code');
   if(s !== active) toast(`${s.id} paid · ${naira(t)}`);
 }
 function promoFor(p){ const cover = p.stock / p.daily; return cover > 10 ? {type:'discount', why:`enough for ${Math.round(cover)} days`} : {type:'points', why:`enough for ${Math.round(cover)} days`}; }
@@ -1400,6 +1429,7 @@ const H = {
       if(me() === 'owner'){ askPin(`Confirm you have seen a valid prescription for ${names}`, 'now', {fn:() => { s.rxOk = true; rxLog.unshift({t:nowHM(), sale:s.id, what:names, by:'Ngozi (pharmacist)', how:'Checked at the counter'}); mcLog('shop', `Prescription check ${s.id}: ${names}`, MAKER.owner, 'Pharmacist PIN', 'Confirmed'); }, done:'Prescription confirmed. Take payment now'}, 'Prescription medicine needs the pharmacist'); return 'nore'; }
       const r = {id:'RQ-' + (rqSeq++), kind:'rx', sid:s.id, detail:`Prescription check on ${s.id}: ${names}`, maker:MAKER[me()], status:'pending'}; r.mc = mcLog('shop', r.detail, r.maker, '—', 'Waiting for owner'); shopReqs.unshift(r); s.rxPending = true; toast('Sent to Ngozi (pharmacist) to check the prescription'); return; }
     if(m === 'cash'){ complete(s, 'cash'); openModal('sale'); return; }
+    if(m === 'card'){ s.mode = 'card'; s.card = {st:'ready'}; openModal('sale'); return; }
     s.mode = m;
     if(m === 'till'){ s.opts = [{ref:'TILL-'+(till++), amt:total(s), at:'just now'},{ref:'TILL-88207', amt:105000, at:'14:05'},{ref:'TILL-88199', amt:780000, at:'13:51'}]; L('momo', 'merchant wallet feed · 3 unmatched till payments'); }
     if(m === 'transfer'){ s.opts = [{ref:'TRF-'+(trf++), from:'K. Adebayo', amt:total(s), at:'just now'},{ref:'TRF-40917', from:'S. Okafor', amt:250000, at:'14:02'}]; L('momo', 'merchant wallet feed · 2 unmatched inbound transfers'); }
@@ -1409,6 +1439,12 @@ const H = {
     L('momo', `${railName(s.rail)}: POST request to pay ${naira(total(s))} from ${s.msisdn.slice(0,4)}••••${s.msisdn.slice(-4)} · payee MW-20417`);
     L('momo', '202 Accepted · PENDING'); },
   retry(){ active.mode = 'momo'; active.notice = ''; },
+  cardgo(){ const s = active; s.card = {st:'presenting'}; L('card', `purchase ${naira(total(s))} for ${s.id} handed to the terminal's card app · ShopBook gets only the result`); },
+  cardres(r){ const s = active; if(!s.card) return;
+    if(r === 'ok'){ s.card = {st:'ok', scheme:'Verve', last4:'4821', rrn:String(260000000000 + (att * 7919) % 99999999), auth:'A' + (100000 + att % 899999)}; att++; L('card', `APPROVED · ${s.card.scheme} ••••${s.card.last4} · RRN ${s.card.rrn} · settles to the shop wallet`); complete(s, 'card'); return; }
+    s.card = {st: r === 'no' ? 'declined' : 'cancelled'}; L('card', r === 'no' ? 'DECLINED by the card issuer · no money moved' : 'CANCELLED on the terminal · no money moved'); },
+  printrcpt(){ L('card', `receipt for ${active.id} sent to the terminal printer (58 mm)`); toast('Printing the receipt'); },
+  device(v){ setTerm(v === 'term'); },
   park(){ L('us', `${active.id} parked · next customer served`); active = newSale(); closeModal(); },
   match(ref){ const s = active; const o = s.opts.find(x => x.ref === ref);
     if(o.amt !== total(s)){ s.notice = `That payment is ${naira(o.amt)}, but this sale is ${naira(total(s))}.`; return; }
@@ -1860,7 +1896,7 @@ function renderSell(){
     <div class="lines">${itemsCount(s) ? s.order.map(id => { const p = prod(id); return `<div class="line"><span>${esc(p.name)}</span><span class="qty"><button data-act="dec" data-arg="${id}" aria-label="One less ${esc(p.name)}" ${s.state!=='open'?'disabled':''}>−</button><span class="num">${s.lines[id]}</span><button data-act="inc" data-arg="${id}" aria-label="One more ${esc(p.name)}" ${s.state!=='open'?'disabled':''}>+</button></span><span class="num">${naira(priceOf(p)*s.lines[id])}</span></div>`; }).join('') + s.quick.map((q,i) => `<div class="line"><span>${esc(q.name)} <span class="pill plain">quick sale</span></span><button class="btn sm" data-act="qdel" data-arg="${i}">Remove</button><span class="num">${naira(q.amt)}</span></div>`).join('') : '<div class="empty">Tap goods to add them</div>'}</div>
     ${s.mode==='failed' && !ui.modal ? '<p class="notice">Wallet payment did not go through. Choose another way to pay.</p>' : ''}
     <div class="total"><span>Total</span><b class="num">${naira(t)}</b></div>
-    <div class="pay"><button class="btn primary momo" data-act="pay" data-arg="momo" ${dis}>Collect by wallet</button><button class="btn" data-act="pay" data-arg="transfer" ${dis || (railOn('bank').length ? '' : 'disabled')}>Transfer</button><button class="btn" data-act="pay" data-arg="till" ${dis || (railOn('code').length ? '' : 'disabled')}>Shop pay code</button><button class="btn" data-act="pay" data-arg="cash" ${dis}>Cash</button><button class="btn" data-act="pay" data-arg="account" ${dis}>${me() === 'owner' ? 'Pay later' : 'Pay later (needs OK)'}</button></div>
+    <div class="pay">${ui.term ? `<button class="btn primary cardbtn" data-act="pay" data-arg="card" ${dis}>Card: insert, tap or swipe</button>` : ''}<button class="btn ${ui.term ? '' : 'primary '}momo" data-act="pay" data-arg="momo" ${dis}>Collect by wallet</button><button class="btn" data-act="pay" data-arg="transfer" ${dis || (railOn('bank').length ? '' : 'disabled')}>Transfer</button><button class="btn" data-act="pay" data-arg="till" ${dis || (railOn('code').length ? '' : 'disabled')}>Shop pay code</button><button class="btn" data-act="pay" data-arg="cash" ${dis}>Cash</button><button class="btn" data-act="pay" data-arg="account" ${dis}>${me() === 'owner' ? 'Pay later' : 'Pay later (needs OK)'}</button></div>
     ${s.discount ? `<div class="rline small"><span>Discount</span><span class="num">−${naira(s.discount)}</span></div>` : ''}${s.discPending ? '<span class="pill info">Discount waiting for Ngozi</span>' : ''}
     ${itemsCount(s) && s.state==='open' ? '<div class="actions"><button class="btn sm" data-act="discask">Discount</button><button class="btn sm" data-act="clearcart">Clear sale</button></div>' : ''}`;
   const cb = $('#cartbar'); cb.hidden = !itemsCount(s) || !!ui.modal; cb.innerHTML = `<span>${itemsCount(s)} item${itemsCount(s)===1?'':'s'}</span><span class="num">Collect ${naira(t)}</span>`;
@@ -2191,7 +2227,7 @@ function renderRails(){
     else act = `<button class="btn sm ${r.on ? '' : 'primary'}" data-act="railask" data-arg="${r.id}" style="align-self:flex-start">${r.on ? 'Ask to switch off' : 'Ask to switch on'}</button>`;
     return `<div class="card"><div class="row"><b>${esc(r.name)}</b><span class="pill ${r.on ? 'good' : 'plain'}">${r.on ? 'On' : 'Off'}</span></div><span class="muted small">${esc(r.note)}</span><div class="rline small"><span>Payments confirmed</span><b class="num">${r.ok}</b></div><div class="rline small"><span>Typical time to confirm</span><b class="num">${r.secs} seconds</b></div>${act}</div>`; }).join('');
 }
-function tourGo(i){
+function tourGo(i){ if(ui.term){ ui.term = false; document.body.classList.remove('term'); }
   if(i >= TOUR.length){ ui.tour = null; try { localStorage.setItem('sb-tour', 'seen'); } catch(e){} renderTour(); toast('That’s the tour. Explore anything, or start again from Tour.'); return; }
   if(ui.trade !== 'prov') setTrade('prov');
   const st = TOUR[i]; ui.tour = i; ui.drawer = false; closeModal(); $('#modal').hidden = true; $('#lock').hidden = true;
@@ -2234,6 +2270,13 @@ function renderDrawer(){
 
 /* modals */
 const mhead = (title, sub) => `<div class="mhead"><div><h2>${title}</h2>${sub?`<span class="muted small">${sub}</span>`:''}</div><button class="x" data-act="mclose" aria-label="Close">×</button></div>`;
+function receiptHtml(s){
+  const now = new Date(), d = now.toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric'}) + ' ' + nowHM();
+  const lines = s.order.map(id => { const p = prod(id), q = s.lines[id]; return `<div class="rl"><span>${esc(p.name)}<br>${fmtQ(q)} x ${naira(priceOf(p))}</span><span>${naira(priceOf(p) * q)}</span></div>`; }).join('') + s.quick.map(q => `<div class="rl"><span>${esc(q.name)}</span><span>${naira(q.amt)}</span></div>`).join('');
+  const who = (PEOPLE.shop.find(x => x[0] === me()) || ['', ''])[1];
+  return `<div class="receipt" role="img" aria-label="Receipt preview for ${s.id}"><b>${esc(SHOP.name)}</b><span>${esc(SHOP.area)}</span><span>${d}</span><span>${s.id} · ${esc(who)}</span><hr>${lines}<hr><div class="rl tot"><span>TOTAL</span><span>${naira(total(s))}</span></div><div class="rl"><span>Paid by</span><span>${s.method === 'card' && s.card ? 'Card ••••' + s.card.last4 : esc(s.method === 'momo' ? 'Wallet' : s.method)}</span></div>${s.method === 'card' && s.card ? `<div class="rl"><span>RRN</span><span>${s.card.rrn}</span></div><div class="rl"><span>Auth</span><span>${s.card.auth}</span></div>` : ''}<hr><span>Thank you. Goods sold are not returned without this receipt.</span><span>Powered by ShopBook</span></div><button class="btn block" data-act="printrcpt">Print receipt</button>`;
+}
+function setTerm(on){ ui.term = !!on; document.body.classList.toggle('term', ui.term); const d = $('#device'); if(d) d.value = ui.term ? 'term' : 'web'; if(ui.term && currentView() !== 'sell'){ if(ui.role !== 'shop'){ ui.role = 'shop'; } location.hash = '#sell'; } render(); }
 function renderSaleModal(){
   const s = active, t = total(s);
   const summary = `<div class="rline"><span class="muted">${s.id} · ${itemsCount(s)} item${itemsCount(s)===1?'':'s'}</span><b class="num">${naira(t)}</b></div>`;
@@ -2243,6 +2286,10 @@ function renderSaleModal(){
     if(s.mode === 'quick') h = mhead('Item not in list', 'You can add it to your goods later') + `<div class="field"><label for="qname">What was sold</label><input id="qname" value="Matchbox"></div><div class="field"><label for="qamt">Amount (₦)</label><input id="qamt" type="number" inputmode="decimal" value="100"></div><button class="btn primary block" data-act="quickadd">Add to sale</button>`;
     else if(s.mode === 'momo') h = mhead('Collect by wallet', 'Send the customer a payment request') + summary + `<div class="field"><label for="rail">Customer's wallet</label><select id="rail">${railOpts(s.rail)}</select></div><div class="field"><label for="msisdn">Customer's wallet number</label><input id="msisdn" inputmode="tel" value="${esc(s.msisdn)}"></div><p class="muted small">The customer approves on their phone. Money goes straight to your shop wallet.</p><button class="btn primary block" data-act="send">Ask customer to pay ${naira(t)}</button>`;
     else if(s.mode === 'failed') h = mhead('Payment failed', s.id) + summary + `<div class="panel bad"><b>The wallet says the payment did not go through.</b><span class="small">No money has moved. Try again or choose another way to pay.</span></div><div class="actions"><button class="btn primary" data-act="retry">Try the wallet again</button><button class="btn" data-act="mclose">Choose another way</button></div>`;
+    else if(s.mode === 'card'){ const c = s.card || {st:'ready'};
+      if(c.st === 'presenting') h = mhead('Card payment', s.id) + summary + `<div class="panel info"><div style="display:flex; gap:10px; align-items:center"><span class="spin" aria-hidden="true"></span><b>Insert, tap or swipe the card</b></div><span class="small">The customer enters their PIN on the terminal. ShopBook never sees the card number or PIN.</span></div><p class="muted small">Demo: choose the card app's answer.</p><div class="actions"><button class="btn" data-act="cardres" data-arg="no">Declined</button><button class="btn" data-act="cardres" data-arg="none">Cancelled</button><button class="btn primary" data-act="cardres" data-arg="ok">Approved</button></div>`;
+      else if(c.st === 'declined' || c.st === 'cancelled') h = mhead(c.st === 'declined' ? 'Card declined' : 'Card payment cancelled', s.id) + summary + `<div class="panel bad"><b>No money has moved.</b><span class="small">${c.st === 'declined' ? 'The card was declined by its bank.' : 'The payment was stopped on the terminal.'} Try again or choose another way to pay.</span></div><div class="actions"><button class="btn primary" data-act="cardgo">Try the card again</button><button class="btn" data-act="mclose">Choose another way</button></div>`;
+      else h = mhead('Card payment', s.id) + summary + `<p class="small">ShopBook passes the amount to the terminal's card app. The customer pays there; ShopBook records the sale when the card app says it is approved.</p><button class="btn primary block" data-act="cardgo">Send ${naira(t)} to the card app</button><p class="muted small">Card money settles into your shop wallet through the card partner, usually the next working day.</p>`; }
     else if(s.mode === 'till') h = matchList('Shop pay code', 'Money paid to your shop code that is not linked to a sale yet.');
     else if(s.mode === 'transfer') h = matchList('Transfer', 'The customer transfers to this account. Pick their payment when it comes in.', `<div class="acct"><span class="muted small">Pay to · shop's bank account · sample</span><b class="num">9031 455 210</b><span class="small">${esc(SHOP.name)}</span></div>`);
     else if(s.mode === 'account'){ const c = customers.find(x => x.id === ui.accCust); h = mhead('Pay later', s.id) + summary + `<div class="field"><label for="acc-cust">Who is buying</label><select id="acc-cust">${customers.map(x => `<option value="${x.id}" ${x.id === ui.accCust ? 'selected' : ''}>${esc(x.name)} · owes ${naira(x.owed)}</option>`).join('')}<option value="new" ${ui.accCust === 'new' ? 'selected' : ''}>Someone new…</option></select></div>` + (ui.accCust === 'new' || !c ? `<div class="formrow"><div class="field"><label for="acc-name">Name</label><input id="acc-name"></div><div class="field"><label for="acc-phone">WhatsApp number</label><input id="acc-phone" inputmode="tel"></div></div>` : `<div class="rline muted small"><span>Most ${esc(c.name)} can owe</span><span class="num">${naira(c.limit)}</span></div>${c.owed + t > c.limit ? `<p class="notice">${esc(c.name)} will owe more than you allow.</p>` : ''}`) + `<p class="small" id="acc-err" style="color:var(--bad)"></p><button class="btn primary block" data-act="accountok">Record ${naira(t)} to pay later</button><p class="muted small">They will show in Who Owes Me.</p>`; }
@@ -2253,8 +2300,8 @@ function renderSaleModal(){
       ? mhead('Take cash instead?', s.id) + summary + `<div class="panel warn"><span class="small">If the wallet payment still goes through, the customer pays twice. We will tell you to refund them.</span></div><div class="actions"><button class="btn" data-act="back">Keep waiting</button><button class="btn primary" data-act="cashok">Take ${naira(t)} cash</button></div>`
       : mhead('Still waiting for the wallet', s.attempt.ref) + summary + `<div class="panel warn"><b>Payment not confirmed yet</b><span class="small">We keep checking. Don't collect again yet.</span></div><div class="actions"><button class="btn" data-act="park">Hold and serve next</button><button class="btn" data-act="cashwarn">Take cash instead</button></div>`;
   } else if(s.state === 'completed'){
-    const label = {momo:'Wallet', transfer:'Transfer', cash: s.cashAfterUnknown?'Cash (wallet still not confirmed)':'Cash', till:'Shop pay code', account:'Pay later, ' + (s.custName||'')}[s.method];
-    h = mhead('Sale complete', s.id) + `<div class="panel good"><div class="rline"><span>Amount</span><b class="num">${naira(t)}</b></div><div class="rline"><span>Paid by</span><b>${label}</b></div><div class="rline"><span>Taken from goods</span><b class="num">${s.order.reduce((a,id)=>a+s.lines[id],0)}</b></div>${s.method==='momo'?`<div class="rline"><span>Customer earned</span><b class="num">${s.points} points</b></div>`:''}</div>${s.flagged.length?`<p class="small muted">Your records show none left of: ${esc(s.flagged.join(', '))}. Count them soon.</p>`:''}${s.method==='momo'?'<p class="muted small">Receipt sent to the customer by SMS.</p>':''}<button class="btn primary block" data-act="newsale">New sale</button>${s.method==='cash'||s.method==='account' ? `<button class="btn block" data-act="voidask">${me()==='owner'?'Void this sale':'Ask Ngozi to void this sale'}</button>` : '<p class="muted small">Phone payments are refunded, not voided.</p>'}`;
+    const label = {card: s.card && s.card.scheme ? `Card · ${s.card.scheme} ••••${s.card.last4}` : 'Card', momo:'Wallet', transfer:'Transfer', cash: s.cashAfterUnknown?'Cash (wallet still not confirmed)':'Cash', till:'Shop pay code', account:'Pay later, ' + (s.custName||'')}[s.method];
+    h = mhead('Sale complete', s.id) + `<div class="panel good"><div class="rline"><span>Amount</span><b class="num">${naira(t)}</b></div><div class="rline"><span>Paid by</span><b>${label}</b></div><div class="rline"><span>Taken from goods</span><b class="num">${s.order.reduce((a,id)=>a+s.lines[id],0)}</b></div>${s.method==='momo'?`<div class="rline"><span>Customer earned</span><b class="num">${s.points} points</b></div>`:''}</div>${s.flagged.length?`<p class="small muted">Your records show none left of: ${esc(s.flagged.join(', '))}. Count them soon.</p>`:''}${s.method==='momo'?'<p class="muted small">Receipt sent to the customer by SMS.</p>':''}${ui.term ? receiptHtml(s) : ''}<button class="btn primary block" data-act="newsale">New sale</button>${s.method==='cash'||s.method==='account' ? `<button class="btn block" data-act="voidask">${me()==='owner'?'Void this sale':'Ask Ngozi to void this sale'}</button>` : `<p class="muted small">${s.method === 'card' ? 'Card' : 'Phone'} payments are refunded, not voided.</p>`}`;
   } else {
     h = mhead('Payment taken back', s.id) + `<div class="panel bad"><span class="small">The wallet took this payment back. The customer still owes you. The goods have left, so your goods list stays the same.</span></div><button class="btn primary block" data-act="newsale">New sale</button>`;
   }
@@ -2320,7 +2367,7 @@ function render(){ const v = currentView(); renderShell(v); renderSell(); render
 /* ---------- routing and events ---------- */
 const views = ['route','sites','expiry','gastank','pumps','salon','kitchen','books','staff','comply','cshop','corders','cpoints','lapps','lbook','rails','team','sapprove','sorders','sdeliver','smoney','sprices','brand','bpromo','sell','owed','stock','reorder','orders','insights','credit','agents','console','more'];
 const currentView = () => { const h = (location.hash||'').slice(1); return views.includes(h) ? h : ROLES[ui.role || 'shop'].def; };
-function route(){ const v = currentView(); if(['supplier','brand'].includes(roleOf(v)) && ui.trade !== 'prov'){ setTrade('prov'); toast('Supplier and brand views use the provisions network (Mama Ngozi Provisions)'); } if(PACKVIEWS.includes(v) && (TRADES[ui.trade].nav || [])[0] !== v){ location.hash = '#sell'; return; } ui.role = roleOf(v); if(!allowed(v)){ location.hash = '#' + (ALLOW[me()] || [ROLES[ui.role].def])[0]; return; } views.forEach(x => { $('#v-'+x).hidden = x !== v; }); render(); window.scrollTo(0,0); }
+function route(){ if((location.hash || '') === '#terminal'){ ui.term = true; document.body.classList.add('term'); location.hash = '#sell'; return; } if(ui.term && (location.hash || '').slice(1) !== 'sell' && views.includes((location.hash || '').slice(1))){ location.hash = '#sell'; return; } const v = currentView(); if(['supplier','brand'].includes(roleOf(v)) && ui.trade !== 'prov'){ setTrade('prov'); toast('Supplier and brand views use the provisions network (Mama Ngozi Provisions)'); } if(PACKVIEWS.includes(v) && (TRADES[ui.trade].nav || [])[0] !== v){ location.hash = '#sell'; return; } ui.role = roleOf(v); if(!allowed(v)){ location.hash = '#' + (ALLOW[me()] || [ROLES[ui.role].def])[0]; return; } views.forEach(x => { $('#v-'+x).hidden = x !== v; }); render(); window.scrollTo(0,0); }
 window.addEventListener('hashchange', route);
 (function(){ if(!window.matchMedia) return; const mq = matchMedia('(max-width: 860px)');
   const parts = () => ['#role-view', '#trade', '#who-view'].map(id => document.querySelector(id).closest('label')).concat([document.querySelector('.tourbtn')]);
@@ -2349,6 +2396,7 @@ document.addEventListener('change', e => {
   else if(id === 'consent'){ consent = e.target.checked; if(credit.state === 'needconsent'){ credit = {state:'none'}; renderOffer(); } }
   else if(id === 'trade'){ setTrade(e.target.value); const v = currentView(), nv = TRADES[ui.trade].nav; if(ui.role === 'shop' && nv) location.hash = '#' + nv[0]; else if(PACKVIEWS.includes(v)) location.hash = '#sell'; render(); }
   else if(id === 'ptype'){ ui.ptype = e.target.value; render(); }
+  else if(id === 'device'){ setTerm(e.target.value === 'term'); }
   else if(id === 'bj-item'){ B.draft.item = e.target.value; }
   else if(id === 'bj-cust' || id === 'bj-truck' || id === 'bj-pay'){ B.draft[id.slice(3)] = e.target.value; renderPacks(); }
   else if(id === 'rail'){ active.rail = e.target.value; }
