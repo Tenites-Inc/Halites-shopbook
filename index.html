@@ -197,6 +197,7 @@ td.r, th.r{text-align:right}
 #demoswitch .rolesel{justify-content:space-between}
 #demoswitch .rolesel > span{display:inline!important}
 #demoswitch .rolesel select{max-width:62%}
+#parked:empty,#sellreq:empty,#packsell:empty{display:none}
 .ptile.isout{opacity:.62}
 .ptile.isout .tile{background:var(--surface-2)}
 
@@ -253,6 +254,9 @@ td.r, th.r{text-align:right}
   .cart{position:static}
   .page{padding-block:16px 150px}
   .tour{bottom:calc(122px + env(safe-area-inset-bottom,0px))}
+  .tour.intro{top:calc(68px + env(safe-area-inset-top,0px)); bottom:auto; left:max(12px,env(safe-area-inset-left,0px)); right:max(12px,env(safe-area-inset-right,0px)); width:auto; flex-direction:row; align-items:center; gap:10px; padding:8px 8px 8px 14px; border-radius:12px}
+  .tour.intro p{flex:1; min-width:0}
+  body.has-intro .page{padding-top:76px}
   .bnav{display:grid; grid-template-columns:repeat(5,1fr); position:fixed; left:0; right:0; bottom:0; z-index:40; background:var(--surface); border-top:1px solid var(--line); padding-bottom:env(safe-area-inset-bottom,0px); padding-left:env(safe-area-inset-left,0px); padding-right:env(safe-area-inset-right,0px)}
   .bnav a{display:flex; flex-direction:column; align-items:center; gap:2px; padding:8px 2px 7px; font-size:11px; font-weight:500; color:var(--muted); text-decoration:none; position:relative}
   .bnav a[aria-current="page"]{color:var(--ink); font-weight:700}
@@ -275,6 +279,10 @@ td.r, th.r{text-align:right}
   .bar .in{flex-wrap:nowrap}
   .bar .right{width:auto; flex-wrap:nowrap; justify-content:flex-end}
   .bar .sync > span{display:none}
+  .bar .avatar{display:none}
+  .ptile .tile{display:none}
+  .ptile{min-height:0; padding:10px 12px; gap:4px}
+  .ptile .top:not(:has(.badge)){display:none}
   .meter{display:block; width:44px; margin:4px 0 0 auto}
   table.je thead{display:none}
   table.je tr{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:2px 12px; padding:10px 0; border-bottom:1px solid var(--line)}
@@ -2194,8 +2202,11 @@ function tourGo(i){
 function tourHL(){ document.querySelectorAll('.tour-hl').forEach(e => e.classList.remove('tour-hl')); const st = TOUR[ui.tour]; if(!st || !st.hl) return; const el = document.querySelector(st.hl); if(el){ el.classList.add('tour-hl'); try { el.scrollIntoView({block:'center', behavior:'smooth'}); } catch(e){} } }
 function renderTour(){
   const el = $('#tour');
-  if(ui.tour === null || ui.tour === undefined){ el.hidden = true; document.querySelectorAll('.tour-hl').forEach(e => e.classList.remove('tour-hl')); return; }
+  if(ui.tour === null || ui.tour === undefined){ document.body.classList.remove('has-intro'); el.hidden = true; document.querySelectorAll('.tour-hl').forEach(e => e.classList.remove('tour-hl')); return; }
   el.hidden = false;
+  el.classList.toggle('intro', ui.tour === -1);
+  document.body.classList.toggle('has-intro', ui.tour === -1);
+  if(ui.tour === -1 && window.matchMedia && matchMedia('(max-width: 860px)').matches){ el.innerHTML = '<p class="small"><b>New here?</b> Take the 5-minute guided tour.</p><button class="btn sm primary" data-act="tour" data-arg="start">Start the tour</button><button class="x" data-act="tour" data-arg="end" aria-label="Not now">×</button>'; return; }
   if(ui.tour === -1){ el.innerHTML = '<div class="row"><h3>New here?</h3><button class="x" data-act="tour" data-arg="end" aria-label="Close">×</button></div><p class="small">Take the 5-minute guided tour: a shop, its supplier, a lender, a brand, a customer and the partner, all with sample data.</p><div class="actions"><button class="btn sm" data-act="tour" data-arg="end">Not now</button><button class="btn sm primary" data-act="tour" data-arg="start">Start the tour</button></div>'; return; }
   const st = TOUR[ui.tour];
   el.innerHTML = `<div class="row"><span class="pill info">Step ${ui.tour + 1} of ${TOUR.length} · ${esc(st.side)}</span><button class="x" data-act="tour" data-arg="end" aria-label="Close tour">×</button></div><h3>${esc(st.title)}</h3><p class="small">${st.body}</p><div class="actions"><button class="btn sm" data-act="tour" data-arg="back" ${ui.tour === 0 ? 'disabled' : ''}>Back</button><button class="btn sm primary" data-act="tour" data-arg="next">${ui.tour === TOUR.length - 1 ? 'Finish' : 'Next'}</button></div>`;
