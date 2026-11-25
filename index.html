@@ -150,6 +150,56 @@ main{min-width:0}
 .receipt .tot{font-weight:700; font-size:13px}
 /* POS card terminal mode: the Sell screen only, sized for a 5-6 inch Android terminal, big touch targets */
 body.term .app{grid-template-columns:1fr; max-width:420px; margin-inline:auto; border-inline:1px solid var(--line); min-height:100vh; background:var(--bg)}
+/* ---------- Easy view: for staff, few words, big pictures ---------- */
+body.easy .page{font-size:17px}
+body.easy #todayline, body.easy #today, body.easy #pfilter, body.easy #v-sell .phead .actions, body.easy #parked{display:none}
+body.easy #v-sell .bcrow label{display:none}
+body.easy #v-sell .bcrow .btn{min-height:56px; font-size:17px; flex:1}
+body.easy #v-sell .search input{min-height:52px; font-size:17px}
+.ezbar{display:none}
+body.easy .ezbar{display:flex; flex-wrap:wrap; gap:10px; align-items:stretch; margin-bottom:12px}
+.ezbig{display:flex; align-items:center; gap:12px; min-height:64px; padding:10px 16px; border-radius:14px; border:2px solid var(--line); background:var(--surface); font-size:18px; font-weight:700; color:var(--ink); text-decoration:none; cursor:pointer; flex:1 1 180px}
+.ezbig .i{width:32px; height:32px}
+.ezbig.wait{background:var(--warn-soft); border-color:var(--warn)}
+.ezbig .cnt{margin-left:auto; min-width:32px; height:32px; border-radius:99px; background:var(--warn); color:#fff; display:grid; place-items:center; font-size:16px}
+.ezlang{display:flex; gap:6px; align-items:center}
+.ezlang button{min-height:44px; padding:0 14px; border-radius:10px; border:2px solid var(--line); background:var(--surface); font:inherit; font-weight:700}
+.ezlang button[aria-pressed="true"]{border-color:var(--accent); background:var(--accent-soft)}
+body.easy .pgrid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:12px}
+.ptile.ez{align-items:center; text-align:center; min-height:170px; gap:6px; border-width:2px}
+.ptile.ez b{font-size:16px}
+.ptile.ez .pr{font-size:20px; font-weight:800}
+.pic{width:64px; height:64px; border-radius:16px; display:grid; place-items:center; position:relative}
+.pic svg{width:40px; height:40px; fill:none; stroke:var(--ink); stroke-width:1.6; stroke-linejoin:round; stroke-linecap:round}
+.pic.h1{background:var(--info-soft)} .pic.h2{background:var(--warn-soft)} .pic.h3{background:var(--good-soft)} .pic.h4{background:var(--accent-soft)} .pic.h5{background:var(--bad-soft)} .pic.h6{background:var(--surface-2)}
+.sdot{position:absolute; top:-4px; right:-4px; width:20px; height:20px; border-radius:99px; border:3px solid var(--surface)}
+.sdot.low{background:var(--warn)} .sdot.out{background:var(--bad)}
+body.easy .cart .card-head h2{font-size:20px}
+body.easy .line{font-size:17px; padding:12px 10px}
+body.easy .qty button{width:48px; height:48px; font-size:24px; border-radius:12px}
+body.easy .total{font-size:24px}
+body.easy .total b{font-size:34px}
+.ezpay{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+.ezpay .btn{min-height:84px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; font-size:17px; font-weight:700; border-width:2px}
+.ezpay .btn .i{width:34px; height:34px}
+.ezpay .btn.wide{grid-column:1 / -1}
+body.easy #mbody{font-size:17px}
+body.easy #mbody .panel{align-items:center; text-align:center; padding:18px 14px; gap:10px}
+body.easy #mbody .panel b{font-size:20px}
+body.easy #mbody .panel .small, body.easy #mbody p.muted.small:not(:has(button)), body.easy #mbody p.small:not(:has(button)):not(#cl-err){display:none}
+body.easy #mbody .panel.good::before, body.easy #mbody .panel.warn::before, body.easy #mbody .panel.bad::before{content:''; width:72px; height:72px; border-radius:99px; background-repeat:no-repeat; background-position:center; background-size:44px}
+body.easy #mbody .panel.good::before{background-color:var(--good); background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E")}
+body.easy #mbody .panel.warn::before{background-color:var(--warn); background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='8'/%3E%3Cpath d='M12 8v4.5l3 2'/%3E%3C/svg%3E")}
+body.easy #mbody .panel.bad::before{background-color:var(--bad); background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M7 7l10 10M17 7L7 17'/%3E%3C/svg%3E")}
+body.easy #mbody .btn{min-height:56px; font-size:17px}
+body.easy #mbody .actions{flex-direction:column; align-items:stretch}
+.notes{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+.note{display:grid; grid-template-columns:auto 1fr auto auto auto; gap:8px; align-items:center; padding:8px; border-radius:12px; border:2px solid var(--line); background:var(--surface)}
+.note .face{width:72px; height:40px; border-radius:6px; display:grid; place-items:center; font-weight:800; font-size:15px; color:#fff}
+.note .n{min-width:28px; text-align:center; font-size:20px; font-weight:800}
+.note button{width:44px; height:44px; border-radius:10px; border:2px solid var(--line); background:var(--surface-2); font-size:22px; line-height:1}
+.notesum{display:flex; justify-content:space-between; align-items:baseline; font-size:20px; font-weight:800; margin:10px 0}
+@media (max-width: 520px){ .notes{grid-template-columns:1fr} .ezpay .btn{min-height:72px} }
 body.term .side, body.term .bnav{display:none!important}
 body.term .bar .rolesel, body.term .bar .tourbtn, body.term .bar #voicebtn, body.term .bar #bell, body.term .bar .avatar, body.term .bar .sync > span{display:none}
 body.term .bar .mark{display:grid; width:32px; height:32px}
@@ -371,6 +421,7 @@ td.r, th.r{text-align:right}
 
     <section class="page" id="v-sell" hidden>
       <div class="phead"><div><h1>Sell</h1><p id="todayline"></p></div><div class="actions"><button class="btn" data-act="openbills" data-perm="owner,assistant">Airtime &amp; bills</button><button class="btn" data-act="openclose" data-perm="owner,assistant">Close the day</button></div></div>
+      <div class="ezbar" id="ezbar"></div>
       <div class="chips" id="parked"></div>
       <div class="stack" id="sellreq"></div>
       <div class="stack" id="packsell"></div>
@@ -828,6 +879,7 @@ td.r, th.r{text-align:right}
   <div class="dhead"><div><h2>Demo controls</h2><span class="muted small">Not part of the product. Play the customer and the wallet rail.</span></div><button class="x" data-act="drawer" aria-label="Close demo controls">×</button></div>
   <label class="rolesel devsel"><span>Shop setup</span><select id="setup" aria-label="Shop setup"><option value="single">ShopBook on the card terminal, two SIMs</option><option value="separate">Large shop: ShopBook POS on Wi-Fi, separate card terminal</option></select></label>
   <label class="rolesel devsel"><span>Device</span><select id="device" aria-label="Device"><option value="web">Phone or computer</option><option value="term">POS card terminal</option></select></label>
+  <label class="rolesel devsel"><span>Staff screens</span><select id="easysel" aria-label="Staff screens"><option value="auto">Easy view for staff, full view for the owner</option><option value="on">Easy view for everyone</option><option value="off">Full view for everyone</option></select></label>
   <label class="rolesel devsel"><span>Card guarantee</span><select id="guar" aria-label="Card guarantee"><option value="off">Off until a partner underwrites it</option><option value="on">On (demo of the future option)</option></select></label>
   <div id="demoswitch" aria-label="Switch the demo view"></div>
   <div class="dbody">
@@ -972,7 +1024,7 @@ const flags = [
  {id:'F-203', what:'Payer shares a device with shop staff', detail:'Identity match: yes · 95 pts pending', by:'Tunde', state:'frozen'}
 ];
 const rpEl = document.getElementById('rpdate'); if(rpEl){ try { rpEl.textContent = new Date().toLocaleDateString('en-GB', {weekday:'long', day:'numeric', month:'long', timeZone:'Africa/Lagos'}); } catch(e){ rpEl.textContent = 'Today'; } }
-const ui = {guarantee:false, term:false, setup:'single', voice:'en', scanCtx:'stock', closeRes:null, billRes:null, closed:false, accCust:'bello', pf:'all', sf:'all', q:'', modal:null, drawer:false, rcvSup:'ade', rcvDone:null, add:{item:null}, count:null, partner:'Local rider company'};
+const ui = {easy:'auto', lang:'en', notes:{}, guarantee:false, term:false, setup:'single', voice:'en', scanCtx:'stock', closeRes:null, billRes:null, closed:false, accCust:'bello', pf:'all', sf:'all', q:'', modal:null, drawer:false, rcvSup:'ade', rcvDone:null, add:{item:null}, count:null, partner:'Local rider company'};
 let store = {live:false, wa:true, ig:false};
 let consent = false, credit = {state:'none'};
 /* ---------- customer, lender, partner ---------- */
@@ -1494,6 +1546,8 @@ const H = {
     if(r === 'none'){ L('card', `status query: NOT DEBITED · RRN ${c.rrn} · no money moved, reversal not needed`); c.st = 'notdebited'; return; }
     L('card', `status query: still no answer after 3 tries · RRN ${c.rrn} · counter options offered`); c.st = 'unknown'; },
   clrsettle(){ const due = cardLog.filter(x => !x.settled); if(!due.length) return 'nore'; let gross = 0, fee = 0; due.forEach(x => { const f = Math.min(Math.floor(x.amt * 5 / 1000), 100000); gross += x.amt; fee += f; x.settled = true; }); post(`Card settlement file: ${due.length} card sale${due.length === 1 ? '' : 's'} cleared`, [['bank', gross - fee], ['fees', fee], ['cardclr', -gross]]); L('card', `settlement file: ${due.length} approved card sale${due.length === 1 ? '' : 's'} matched · ${naira(gross)} gross, ${naira(fee)} fees, ${naira(gross - fee)} into the shop's account`); toast('Card settlement cleared'); return 'part'; },
+  ezlang(l){ ui.lang = l === 'pcm' ? 'pcm' : 'en'; L('us', `easy view language: ${ui.lang === 'pcm' ? 'Pidgin' : 'English'}`); },
+  note(arg){ const [d, k] = arg.split('|'); ui.notes[d] = Math.max(0, (ui.notes[d] || 0) + (+k)); renderModalStatic(); return 'part'; },
   cardrecheck(){ const s = active; if(!s || !s.card) return 'nore'; s.card.st = 'checking'; L('card', `status query sent again · RRN ${s.card.rrn}`); },
   cardgoods(){ if(!ui.guarantee) return 'nore'; const s = active, c = s.card, t = total(s); if(t > GUARANTEE_CAP){ toast('Above the guarantee limit. Offer a refund or another way to pay.'); return; }
     pendCards.unshift({id:s.id, amt:t, rrn:c.rrn, kind:'goods', st:'pending', t:nowHM()}); s.card = {st:'pending', rrn:c.rrn, route:c.route}; complete(s, 'cardpend');
@@ -1564,7 +1618,7 @@ const H = {
     extra.bills += amt; extra.commission += com;
     if(pay === 'cash') extra.cashIn += amt; else { takings.momo += amt; announce(amt, 'wallet'); }
     ui.billRes = {label:b.name, amt, to, ref, com, token: b.token ? '4821 0937 5512 8846 2071' : null}; renderModalStatic(); return 'part'; },
-  openclose(){ ui.closeRes = null; ui.closeStep = 'check'; ui.batch = null; openModal('close'); renderModalStatic(); return 'part'; },
+  openclose(){ ui.notes = {}; ui.closeRes = null; ui.closeStep = 'check'; ui.batch = null; openModal('close'); renderModalStatic(); return 'part'; },
   zview(i){ ui.closeRes = zLog[+i]; openModal('close'); renderModalStatic(); return 'part'; },
   closestep(v){ ui.closeStep = v; renderModalStatic(); return 'part'; },
   cardbatch(arg){ const n = cardLog.length, t = takings.card; ui.batch = arg === 'diff' ? {count:n + 1, total:t + 250000} : {count:n, total:t}; L('card', `batch closed on the terminal · ${ui.batch.count} card payment${ui.batch.count === 1 ? '' : 's'} · ${naira(ui.batch.total)}`); renderModalStatic(); return 'part'; },
@@ -1867,10 +1921,10 @@ function renderShell(view){
   $('#side').innerHTML = `<div class="logo"><span class="mark" aria-hidden="true">S</span><div><b>ShopBook</b><span>by Halites · any wallet or bank</span></div></div>
     ${(() => { const mk = n => `<a class="nav" href="#${n[0]}" ${view===n[0]?'aria-current="page"':''}>${I[n[2]]}<span>${n[1]}</span>${cnt[n[0]]?`<span class="cnt">${cnt[n[0]]}</span>`:''}</a>`;
       const pack = TRADES[ui.trade].nav ? [TRADES[ui.trade].nav] : [];
-      const main = me() === 'owner' ? [['home','Today','insights'],['sell','Sell','sell'],['stock','My Goods','stock'],['reorder','Restock','reorder']] : me() === 'agent' ? [['setup','Shop setup','console'],['stock','My Goods','stock']] : [['sell','Sell','sell'],['pending','Pending payments','credit']];
+      const main = me() === 'owner' ? [['home','Today','insights'],['sell','Sell','sell'],['stock','My Goods','stock'],['reorder','Restock','reorder']] : me() === 'agent' ? [['setup','Shop setup','console'],['stock','My Goods','stock']] : [['sell','Sell','sell'],['pending', isEasy() ? tz('waiting') : 'Pending payments','credit']];
       const rest = (me() === 'owner' ? pack.concat([NAV[1], NAV[4], NAV[5], NAV[6], NAV[7], ['team','Team','console'], ['setup','Shop setup','console']]) : pack.concat([NAV[2], NAV[3], NAV[4]])).filter(n => allowed(n[0]) && !main.some(m => m[0] === n[0]));
       const mainF = main.filter(n => allowed(n[0]));
-      return (mainF.length ? `<div class="navgroup">Shop</div>` + mainF.map(mk).join('') + (me() === 'assistant' ? `<button class="nav" data-act="openclose" style="width:100%; background:none; border:0; text-align:left; font:inherit; cursor:pointer">${I.book}<span>Close the day</span></button>` : '') : '') + (rest.length ? `<div class="navgroup">${mainF.length ? 'More' : 'Shop'}</div>` + rest.map(mk).join('') : ''); })()}
+      return (mainF.length ? `<div class="navgroup">Shop</div>` + mainF.map(mk).join('') + (me() === 'assistant' ? `<button class="nav" data-act="openclose" style="width:100%; background:none; border:0; text-align:left; font:inherit; cursor:pointer">${I.book}<span>${isEasy() ? tz('close') : 'Close the day'}</span></button>` : '') : '') + (rest.length ? `<div class="navgroup">${mainF.length ? 'More' : 'Shop'}</div>` + rest.map(mk).join('') : ''); })()}
     ${[['books','Accounts','insights'],['staff','Staff & payroll','console'],['comply','Compliance','book']].filter(n => allowed(n[0]) && (me() === 'owner' || me() === 'acct')).length ? `<div class="navgroup">Back office</div>${[['books','Accounts','insights'],['staff','Staff & payroll','console'],['comply','Compliance','book']].filter(n => allowed(n[0]) && (me() === 'owner' || me() === 'acct')).map(n => `<a class="nav" href="#${n[0]}" ${view===n[0]?'aria-current="page"':''}>${I[n[2]]}<span>${n[1]}</span>${cnt[n[0]]?`<span class="cnt">${cnt[n[0]]}</span>`:''}</a>`).join('')}` : ''}
     <div class="foot">Demo shop with sample data</div>`;
   const bn = me() === 'owner' ? [['home','Today','insights'],['sell','Sell','sell'],['stock','Goods','stock'],['reorder','Restock','reorder'],['more','More','more']] : me() === 'assistant' ? [['sell','Sell','sell'],['pending','Pending','credit'],['stock','Goods','stock'],['reorder','Restock','reorder']] : [['sell','Sell','sell'],['stock','Goods','stock'],['reorder','Restock','reorder'],['orders','Online','orders'],['more','More','more']];
@@ -1957,6 +2011,50 @@ function renderOwed(){
   $('#dr-on').checked = debt.on;
   const vb = $('#voicebtn'); vb.innerHTML = ui.voice === 'off' ? I.mute : I.speak; vb.setAttribute('aria-label', 'Payment announcements: ' + (ui.voice === 'off' ? 'off' : ui.voice === 'pcm' ? 'Pidgin' : 'English')); vb.title = vb.getAttribute('aria-label');
 }
+/* ---------- Easy view ---------- */
+const EZ = {
+  en:{waiting:'Waiting money', close:'Close the day', scan:'Scan', search:'Find goods', sale:'This customer', empty:'Touch the goods the customer is buying', total:'Total', cash:'Cash', transfer:'Transfer', wallet:'Wallet', card:'Card', code:'Shop code', later:'Pay later', laterok:'Pay later (Oga OK)', clear:'Start again', quick:'Not in the list', count:'Count the notes', counted:'Cash you counted', pending:'Waiting money', sell:'Sell', more:'More'},
+  pcm:{waiting:'Money wey never land', close:'Close shop for today', scan:'Scan am', search:'Find goods', sale:'This customer', empty:'Touch the goods wey customer wan buy', total:'Total', cash:'Cash', transfer:'Transfer', wallet:'Wallet', card:'Card', code:'Shop code', later:'Pay later', laterok:'Pay later (Oga go OK am)', clear:'Start again', quick:'E no dey list', count:'Count the money', counted:'Money wey you count', pending:'Money wey never land', sell:'Sell', more:'More'}
+};
+const PCM = {'Sale complete':'Money don land','Card declined':'Card no work','Card payment cancelled':'Card payment don cancel','No money has moved.':'Money no move.','Checking with the bank':'We dey ask bank','Do not charge the card again':'No charge the card again','Bank has not answered':'Bank never answer','The customer may have been charged.':'Customer fit don pay.','No money moved':'Money no move','The bank confirms the card was not charged.':'Bank talk say card no pay.','Waiting for customer':'We dey wait customer','Customer is approving on their phone':'Customer dey approve for im phone','Payment failed':'Payment no go','Still waiting for the wallet':'We still dey wait wallet','Payment not confirmed yet':'Money never land','New sale':'Next customer','Try the card again':'Try card again','Another way to pay':'Pay another way','Choose another way':'Pay another way','Ask the bank again':'Ask bank again','Keep waiting':'Wait small','Card payment':'Card payment','Insert, tap or swipe the card':'Put card, tap or swipe','Close the day':'Close shop for today','Start closing':'Start to close','Card totals match.':'Card money correct.','Next: count the cash':'Next: count the cash','Refund set up':'Refund don set','Collect by wallet':'Collect with wallet','Transfer':'Transfer','Pay later':'Pay later','Serve next customer while waiting':'Serve next customer as you dey wait','Hold and serve next':'Hold am, serve next customer','Take cash instead':'Collect cash instead','New item':'New item','Not finished':'Never finish'};
+const isEasy = () => ui.easy === 'on' || (ui.easy !== 'off' && (ui.role || 'shop') === 'shop' && me() === 'assistant');
+const tz = k => (EZ[ui.lang] || EZ.en)[k] || EZ.en[k] || k;
+const PIC = {
+  bottle:'<path d="M10 2.5h4v3l1.5 2.5v12a1.5 1.5 0 01-1.5 1.5h-4A1.5 1.5 0 018.5 20V8L10 5.5z"/><path d="M8.5 11h7"/>',
+  sack:'<path d="M8 6h8l2.5 13a2 2 0 01-2 2.5h-9a2 2 0 01-2-2.5z"/><path d="M8 6L7 3h10l-1 3"/><path d="M9.5 13h5"/>',
+  pack:'<rect x="4" y="6" width="16" height="13" rx="2"/><path d="M4 10h16M9 14h6"/>',
+  tin:'<ellipse cx="12" cy="6" rx="6" ry="2"/><path d="M6 6v12c0 1.1 2.7 2 6 2s6-.9 6-2V6"/><path d="M6 11c0 1.1 2.7 2 6 2s6-.9 6-2"/>',
+  sachet:'<path d="M6 5l1.5-1.5L9 5l1.5-1.5L12 5l1.5-1.5L15 5l1.5-1.5L18 5v14H6z"/><path d="M9 11h6"/>',
+  bread:'<path d="M4.5 11a7.5 5 0 0115 0c0 1.2-.9 1.8-1.5 2v6.5h-12V13c-.6-.2-1.5-.8-1.5-2z"/>',
+  soap:'<rect x="4" y="9" width="16" height="9" rx="4"/><circle cx="8" cy="5.5" r="1.5"/><circle cx="12.5" cy="4.5" r="1"/>',
+  oil:'<path d="M7 7h9l2.5 2.5V20H7z"/><path d="M10 4h4v3"/><path d="M10 13h5"/>',
+  cube:'<path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M4 7.5L12 12l8-4.5M12 12v9"/>',
+  gas:'<rect x="6" y="6" width="12" height="15" rx="5"/><path d="M10 6V3h4v3M6 12h12"/>',
+  plate:'<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/>',
+  pill:'<rect x="3" y="9" width="18" height="6" rx="3"/><path d="M12 9v6"/>',
+  pump:'<path d="M5 21V5a2 2 0 012-2h6a2 2 0 012 2v16"/><path d="M4 21h12M7 7h6M15 9l3 2v6a1.5 1.5 0 003 0V9l-3-3"/>',
+  scissors:'<circle cx="7" cy="17" r="3"/><circle cx="17" cy="17" r="3"/><path d="M9 15L18 4M15 15L6 4"/>',
+  tag:'<path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8.5" r="1.5"/>'
+};
+function picOf(p){ const n = (p.name || '').toLowerCase();
+  const k = p.dish ? ['plate','h5'] : p.service ? ['scissors','h4'] : /gas|cylinder|lpg/.test(n) ? ['gas','h5'] : /petrol|diesel|kerosene|pms|ago|dpk/.test(n) ? ['pump','h2'] : /tablet|capsule|syrup|paracetamol|drug|vitamin/.test(n) ? ['pill','h3']
+    : /drink|water|malt|juice|soda|beer|bottle/.test(n) ? ['bottle','h1'] : /rice|beans|garri|semo|flour|sugar|salt|sack|bag/.test(n) && !/sachet|cube/.test(n) ? ['sack','h2'] : /oil/.test(n) ? ['oil','h2'] : /milk|tomato|tin|sardine|cocoa/.test(n) && !/sachet/.test(n) ? ['tin','h4']
+    : /sachet|cube|seasoning/.test(n) ? ['sachet','h3'] : /bread|biscuit|chin|cake|snack|chips|groundnut/.test(n) ? ['bread','h2'] : /soap|detergent|bleach|cream|paste|toilet|pad|diaper|insect/.test(n) ? ['soap','h4'] : /noodle|spaghetti|macaroni|cornflakes|oats|tea|pack/.test(n) ? ['pack','h1'] : /cement|block|rod|nail/.test(n) ? ['cube','h6'] : ['tag','h6'];
+  return [`<svg viewBox="0 0 24 24" aria-hidden="true">${PIC[k[0]]}</svg>`, k[1]]; }
+const EI = {
+  cash:'<rect x="2.5" y="6" width="19" height="12" rx="2"/><circle cx="12" cy="12" r="2.8"/><path d="M6 9v6M18 9v6"/>',
+  transfer:'<path d="M4 8h14l-3-3M20 16H6l3 3"/>',
+  wallet:'<rect x="7" y="2.5" width="10" height="19" rx="2"/><path d="M11 18.5h2"/>',
+  card:'<rect x="2.5" y="5" width="19" height="14" rx="2"/><path d="M2.5 9.5h19M6 15h4"/>',
+  code:'<rect x="4" y="4" width="6" height="6"/><rect x="14" y="4" width="6" height="6"/><rect x="4" y="14" width="6" height="6"/><path d="M14 14h2v2h-2zM18 18h2v2h-2zM14 18h2M18 14h2"/>',
+  later:'<path d="M5 4h11a3 3 0 013 3v13H8a3 3 0 01-3-3z"/><path d="M5 17a3 3 0 013-3h11M9 8h6"/>',
+  clock:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+  moon:'<path d="M19 14.5A7.5 7.5 0 119.5 5a6 6 0 009.5 9.5z"/>',
+  scan:'<path d="M4 8V5a1 1 0 011-1h3M16 4h3a1 1 0 011 1v3M20 16v3a1 1 0 01-1 1h-3M8 20H5a1 1 0 01-1-1v-3M7 12h10"/>'
+};
+const ei = k => `<svg class="i" viewBox="0 0 24 24" aria-hidden="true">${EI[k]}</svg>`;
+function pcmPass(root){ if(ui.lang !== 'pcm' || !root) return; root.querySelectorAll('b, h2, h3, button, a, span, p').forEach(el => { if(el.children.length) return; const k = el.textContent.trim(); if(PCM[k]) el.textContent = PCM[k]; }); }
+const NOTES = [[1000,'#6B4A2B'],[500,'#2E4F7A'],[200,'#3E6B3A'],[100,'#7A2E55'],[50,'#2F6E78'],[20,'#8A5A1C'],[10,'#8A3B2E'],[5,'#5A5A2E']];
 function renderSell(){
   const s = active, t = total(s);
   $('#todayline').textContent = `${takings.count} sales today · ${digitalShare()}% paid by phone${extra.commission ? ` · ${naira(extra.commission)} commission` : ''}${ui.closed ? ' · day closed' : ''}`;
@@ -1978,6 +2076,19 @@ function renderSell(){
     <div class="pay">${ui.term || ui.setup === 'separate' ? `<button class="btn primary cardbtn" data-act="pay" data-arg="card" ${dis}>Card: insert, tap or swipe</button>` : ''}<button class="btn ${ui.term ? '' : 'primary '}momo" data-act="pay" data-arg="momo" ${dis}>Collect by wallet${ui.term ? ' · on-us' : ''}</button><button class="btn" data-act="pay" data-arg="transfer" ${dis || (railOn('bank').length ? '' : 'disabled')}>Transfer</button><button class="btn" data-act="pay" data-arg="till" ${dis || (railOn('code').length ? '' : 'disabled')}>Shop pay code</button><button class="btn" data-act="pay" data-arg="cash" ${dis}>Cash</button><button class="btn" data-act="pay" data-arg="account" ${dis}>${me() === 'owner' ? 'Pay later' : 'Pay later (needs OK)'}</button></div>
     ${s.discount ? `<div class="rline small"><span>Discount</span><span class="num">−${naira(s.discount)}</span></div>` : ''}${s.discPending ? '<span class="pill info">Discount waiting for Ngozi</span>' : ''}
     ${itemsCount(s) && s.state==='open' ? '<div class="actions"><button class="btn sm" data-act="discask">Discount</button><button class="btn sm" data-act="clearcart">Clear sale</button></div>' : ''}`;
+  if(isEasy()){
+    const waitN = openItems().length;
+    $('#ezbar').innerHTML = `<a class="ezbig ${waitN ? 'wait' : ''}" href="#pending">${ei('clock')}<span>${tz('waiting')}</span>${waitN ? `<span class="cnt">${waitN}</span>` : ''}</a><button class="ezbig" data-act="openclose">${ei('moon')}<span>${tz('close')}</span></button><span class="ezlang" role="group" aria-label="Language"><button data-act="ezlang" data-arg="en" aria-pressed="${ui.lang === 'en'}">English</button><button data-act="ezlang" data-arg="pcm" aria-pressed="${ui.lang === 'pcm'}">Pidgin</button></span>`;
+    const sb = document.querySelector('#v-sell .bcrow .btn'); if(sb) sb.innerHTML = ei('scan') + ' ' + tz('scan');
+    const qi = $('#q'); if(qi) qi.placeholder = tz('search');
+    $('#pgrid').innerHTML = list.map(p => { const st = stockState(p), pc = picOf(p); return `<button class="ptile ez ${st === 'out' ? 'isout' : ''}" data-act="add" data-arg="${p.id}" aria-label="${esc(p.name)}, ${naira(priceOf(p))}${st === 'out' ? ', none left on record' : st === 'low' ? ', almost finished' : ''}"><span class="pic ${pc[1]}">${pc[0]}${st !== 'ok' ? `<span class="sdot ${st}"></span>` : ''}</span><b>${esc(p.name)}</b><span class="pr num">${naira(priceOf(p))}</span></button>`; }).join('') + `<button class="ptile ez quick" data-act="quick"><span class="pic h6">${PIC.tag ? `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>` : ''}</span><b>${tz('quick')}</b></button>`;
+    const pb = (arg, icon, label, extra) => `<button class="btn ${extra || ''}" data-act="pay" data-arg="${arg}" ${dis}>${ei(icon)}<span>${label}</span></button>`;
+    $('#cart').innerHTML = `<div class="card-head"><h2>${tz('sale')}</h2></div>
+      <div class="lines">${itemsCount(s) ? s.order.map(id => { const p = prod(id); return `<div class="line"><span>${esc(p.name)}</span><span class="qty"><button data-act="dec" data-arg="${id}" aria-label="One less ${esc(p.name)}" ${s.state!=='open'?'disabled':''}>−</button><span class="num">${s.lines[id]}</span><button data-act="inc" data-arg="${id}" aria-label="One more ${esc(p.name)}" ${s.state!=='open'?'disabled':''}>+</button></span><span class="num">${naira(priceOf(p)*s.lines[id])}</span></div>`; }).join('') + s.quick.map((q,i) => `<div class="line"><span>${esc(q.name)}</span><button class="btn sm" data-act="qdel" data-arg="${i}">×</button><span class="num">${naira(q.amt)}</span></div>`).join('') : `<div class="empty">${tz('empty')}</div>`}</div>
+      <div class="total"><span>${tz('total')}</span><b class="num">${naira(t)}</b></div>
+      <div class="ezpay">${ui.term || ui.setup === 'separate' ? pb('card', 'card', tz('card'), 'primary wide') : ''}${pb('cash', 'cash', tz('cash'), ui.term || ui.setup === 'separate' ? '' : 'primary')}${railOn('bank').length ? pb('transfer', 'transfer', tz('transfer')) : ''}${pb('momo', 'wallet', tz('wallet'))}${railOn('code').length ? pb('till', 'code', tz('code')) : ''}${pb('account', 'later', me() === 'owner' ? tz('later') : tz('laterok'))}</div>
+      ${s.discount ? `<div class="rline"><span>Discount</span><span class="num">−${naira(s.discount)}</span></div>` : ''}${itemsCount(s) && s.state === 'open' ? `<div class="actions"><button class="btn" data-act="discask">Discount</button><button class="btn" data-act="clearcart">${tz('clear')}</button></div>` : ''}`;
+  } else { const eb = $('#ezbar'); if(eb) eb.innerHTML = ''; }
   const cb = $('#cartbar'); cb.hidden = !itemsCount(s) || !!ui.modal; cb.innerHTML = `<span>${itemsCount(s)} item${itemsCount(s)===1?'':'s'}</span><span class="num">Collect ${naira(t)}</span>`;
 }
 
@@ -2403,6 +2514,7 @@ function renderSaleModal(){
     h = mhead('Payment taken back', s.id) + `<div class="panel bad"><span class="small">The wallet took this payment back. The customer still owes you. The goods have left, so your goods list stays the same.</span></div><button class="btn primary block" data-act="newsale">New sale</button>`;
   }
   $('#mbody').innerHTML = h;
+  if(isEasy()) pcmPass($('#mbody'));
   const ms = $('#msisdn'); if(ms) ms.addEventListener('input', e => { active.msisdn = e.target.value; });
 }
 function updateCom(){ const t = $('#bl-type'), a = $('#bl-amt'), o = $('#bl-com'); if(!t || !a || !o) return; const b = BILLS[+t.value], amt = (parseFloat(a.value) || 0) * 100; o.textContent = `You earn ${naira(Math.round(amt * b.pct / 100))} on this sale.`; }
@@ -2425,6 +2537,7 @@ function renderModalStatic(){
     if(step === 'check'){ el.innerHTML = mhead('Close the day', 'Step 1 of ' + (hasCard ? 3 : 2) + ' · check today') + `<div class="panel plain">${methodRows().map(x => `<div class="rline"><span>${x[0]}</span><b class="num">${naira(x[1])}</b></div>`).join('')}<div class="rline"><b>Sales today</b><b class="num">${takings.count}</b></div></div>${open.length ? `<div class="panel warn"><b>${open.length} sale${open.length === 1 ? ' is' : 's are'} not finished</b><span class="small">${open.map(x => x.id + ' · ' + naira(total(x))).join(', ')}. Finish ${open.length === 1 ? 'it' : 'them'} first, or ${open.length === 1 ? 'it moves' : 'they move'} to tomorrow and ${open.length === 1 ? 'shows' : 'show'} on the Z report.</span></div>` : '<p class="small">No unfinished sales.</p>'}<button class="btn primary block" data-act="closestep" data-arg="${hasCard ? 'card' : 'cash'}">Start closing</button>${ui.term ? '<details class="small"><summary>Mid-day report without closing (X report)</summary>' + dayReport('x') + '</details>' : ''}`; return; }
     if(step === 'card'){ const b = ui.batch, ok = b && b.total === takings.card && b.count === cardLog.length;
       el.innerHTML = mhead('Close the day', 'Step 2 of 3 · close the card batch') + `<p class="small">The card app closes its batch for the day and reports what it took. ShopBook checks it against the card sales it recorded.</p><div class="panel plain"><div class="rline"><span>Card sales in ShopBook</span><b class="num">${cardLog.length} · ${naira(takings.card)}</b></div>${b ? `<div class="rline"><span>Card app batch</span><b class="num">${b.count} · ${naira(b.total)}</b></div>` : ''}</div>` + (b ? (ok ? '<div class="panel good"><b>Card totals match.</b></div>' : `<div class="panel bad"><b>The card app has ${naira(b.total - takings.card)} more than ShopBook.</b><span class="small">Usually a card payment approved after the sale was taken another way, or a card sale not recorded. Check the card slips: refund the customer or record the sale. The difference is saved in the Z report.</span></div>`) + '<button class="btn primary block" data-act="closestep" data-arg="cash">Next: count the cash</button>' : `<button class="btn primary block" data-act="cardbatch" data-arg="match">Close the card batch</button><p class="muted small">Demo: <button class="linkbtn" data-act="cardbatch" data-arg="diff">see a card app total that does not match</button></p>`); return; }
+    if(isEasy()){ const sum = NOTES.reduce((a, [d]) => a + d * (ui.notes[d] || 0), 0); el.innerHTML = mhead(tz('close'), (hasCard ? 3 : 2) + ' / ' + (hasCard ? 3 : 2)) + `<h3 style="margin:4px 0 10px; font-size:20px">${tz('count')}</h3><div class="notes">${NOTES.map(([d, c]) => `<div class="note"><span class="face" style="background:${c}">₦${d}</span><span></span><button data-act="note" data-arg="${d}|-1" aria-label="One less ₦${d} note">−</button><span class="n num" aria-label="₦${d} notes">${ui.notes[d] || 0}</span><button data-act="note" data-arg="${d}|1" aria-label="One more ₦${d} note">+</button></div>`).join('')}</div><div class="notesum"><span>${tz('counted')}</span><span class="num">${naira(sum * 100)}</span></div><input id="cl-count" type="hidden" value="${sum}"><p class="small" id="cl-err" style="color:var(--bad)"></p><button class="btn primary block" data-act="closego">${tz('close')}</button>`; pcmPass(el); return; }
     el.innerHTML = mhead('Close the day', 'Step ' + (hasCard ? 3 : 2) + ' of ' + (hasCard ? 3 : 2) + ' · count the cash') + `<p>Count all the cash in the drawer, including the ${naira(extra.float)} you started with. We show what it should be after you count.</p><div class="field"><label for="cl-count">Cash you counted (₦)</label><input id="cl-count" type="number" inputmode="decimal" placeholder="Total cash"></div><p class="small" id="cl-err" style="color:var(--bad)"></p><button class="btn primary block" data-act="closego">Close the day</button><p class="muted small">Wallet, transfer and pay code money is already checked by the payment rail, so only cash needs counting.</p>`; return; }
   if(k === 'scan'){
     const it = ui.add.item;
@@ -2532,7 +2645,7 @@ function renderPending(){
   const lab = x => x.pendingPL ? "waiting for the owner's OK" : x.state === 'unknown' ? 'waiting for the bank or wallet' : x.state === 'awaiting' ? 'waiting for the customer' : 'on hold';
   $('#pendlist').innerHTML = `<div class="card-head"><h2>Waiting for money</h2><span class="muted small">${open.length}</span></div>${open.length ? open.map(x => `<div class="rline" style="align-items:center; padding:6px 0"><span>${esc(x.id)} · ${lab(x)}</span><span style="display:flex; gap:8px; align-items:center"><b class="num">${naira(total(x))}</b><button class="btn sm" data-act="resume" data-arg="${x.id}">Open</button></span></div>`).join('') : '<p class="muted small">No sale is waiting for money.</p>'}${unused.length ? `<div class="card-head" style="margin-top:12px"><h2>Card approvals not yet matched</h2></div>` + unused.map(a => `<div class="rline"><span>${a.scheme || 'Card'} •••• ${a.last4 || ''}</span><b class="num">${naira(a.amt || 0)}</b></div>`).join('') + '<p class="muted small">Open the sale and choose "Find it in recent approvals" to match one.</p>' : ''}`;
 }
-function render(){ const v = currentView(); renderShell(v); renderHome(); renderPending(); renderSetup(); renderSell(); renderStock(); renderReorder(); renderOrders(); renderInsights(); renderCredit(); renderOffer(); renderConsole(); renderAgents(); renderOwed(); if(ui.trade === 'prov'){ renderSupplier(); renderBrand(); } renderMC(); renderControls(); renderPackSell(); renderPacks(); renderFuel(); renderSalon(); renderKitchen(); renderBooks(); renderStaff(); renderComply(); renderCustomer(); renderLender(); renderRails(); renderTour(); renderDrawer(); renderModal(); document.querySelectorAll('[data-perm]').forEach(el => { el.hidden = !el.dataset.perm.split(',').includes(me()); }); }
+function render(){ document.body.classList.toggle('easy', isEasy()); const v = currentView(); renderShell(v); renderHome(); renderPending(); renderSetup(); renderSell(); renderStock(); renderReorder(); renderOrders(); renderInsights(); renderCredit(); renderOffer(); renderConsole(); renderAgents(); renderOwed(); if(ui.trade === 'prov'){ renderSupplier(); renderBrand(); } renderMC(); renderControls(); renderPackSell(); renderPacks(); renderFuel(); renderSalon(); renderKitchen(); renderBooks(); renderStaff(); renderComply(); renderCustomer(); renderLender(); renderRails(); renderTour(); renderDrawer(); renderModal(); document.querySelectorAll('[data-perm]').forEach(el => { el.hidden = !el.dataset.perm.split(',').includes(me()); }); }
 
 /* ---------- routing and events ---------- */
 const views = ['home','pending','setup','route','sites','expiry','gastank','pumps','salon','kitchen','books','staff','comply','cshop','corders','cpoints','lapps','lbook','rails','team','sapprove','sorders','sdeliver','smoney','sprices','brand','bpromo','sell','owed','stock','reorder','orders','insights','credit','agents','console','more'];
@@ -2567,6 +2680,7 @@ document.addEventListener('change', e => {
   else if(id === 'trade'){ setTrade(e.target.value); const v = currentView(), nv = TRADES[ui.trade].nav; if(ui.role === 'shop' && nv) location.hash = '#' + nv[0]; else if(PACKVIEWS.includes(v)) location.hash = '#sell'; render(); }
   else if(id === 'ptype'){ ui.ptype = e.target.value; render(); }
   else if(id === 'device'){ setTerm(e.target.value === 'term'); }
+  else if(id === 'easysel'){ ui.easy = e.target.value; render(); }
   else if(id === 'guar'){ ui.guarantee = e.target.value === 'on'; L('us', ui.guarantee ? 'card guarantee switched ON for the demo (needs a signed underwriting agreement in production)' : 'card guarantee OFF: no goods released while a card payment is unknown'); render(); }
   else if(id === 'setup'){ ui.setup = e.target.value; L('us', ui.setup === 'separate' ? 'shop setup: ShopBook POS on shop Wi-Fi, card terminal on the PTSP SIM' : 'shop setup: ShopBook on the card terminal with a second SIM'); render(); }
   else if(id === 'bj-item'){ B.draft.item = e.target.value; }
